@@ -1,0 +1,15 @@
+<p class="lead annotatable">{{TITLE}} is a living operations manual for the engineers who build, support, and maintain {{ORG_NAME}}'s software. Read it end-to-end when you're new, and dip into it as a reference after that.</p>
+<p class="annotatable">This is a <strong>living document</strong>, not a one-time artifact — it's expected to drift out of date the moment things change, so it ships with a built-in way to propose corrections. Every substantive paragraph (and every embedded diagram) can be annotated: hover over it and a suggestion button appears.</p>
+<div class="panel info">
+  <span class="panel-icon" aria-hidden="true">
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8.25" stroke="currentColor" stroke-width="1.5"/><path d="M10 9v4.5M10 6.5v.01" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+  </span>
+  <div class="panel-body annotatable">
+    <span class="panel-title">How the suggestion feature works</span>
+    Hover any paragraph, table, list, or code block and click the <span class="pencil-inline" aria-hidden="true"></span> button (or the <strong>Suggest</strong> button on a diagram), then describe the change you'd like. The guide generates a ready-to-paste prompt for an agent running in this repository. The agent checks the suggestion against the source of truth, records it in the change log, edits the relevant section source, and rebuilds. Nothing is sent anywhere automatically — you stay in control of the prompt.
+  </div>
+</div>
+<div class="panel tip">
+  <span class="panel-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 10.5 8.5 14 15 6.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+  <div class="panel-body annotatable"><span class="panel-title">How this page is built</span>This guide is assembled from source: each section lives in its own fragment under <code>sections/</code>, the structure lives in <code>palimpsest.config.json</code>, and the look comes from <code>theme/tokens.css</code>. Running <code>pal build</code> reassembles them into the published file — never hand-edit the generated HTML.</div>
+</div>

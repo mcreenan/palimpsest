@@ -1,0 +1,17 @@
+{
+  "name": "web",
+  "private": true,
+  "packageManager": "pnpm@9.1.0",
+  "scripts": {
+    "dev": "pnpm -r --parallel dev",
+    "build": "pnpm -r build",
+    "test": "vitest run",
+    "lint": "eslint apps packages"
+  },
+  "engines": { "node": ">=20" },
+  "devDependencies": {
+    "eslint": "^9.3.0",
+    "typescript": "^5.4.5",
+    "vitest": "^1.6.0"
+  }
+}

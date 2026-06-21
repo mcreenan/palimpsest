@@ -1,0 +1,27 @@
+<p class="lead annotatable">This starter section shows the building blocks you'll use most. Edit <code>sections/2-getting-started.html</code>, run <code>pal build</code>, and watch it change — then replace it with your own onboarding content.</p>
+
+<h3>Authoring building blocks</h3>
+<p class="annotatable">Reference a repository as a link, never as monospace — for example <a class="gh-repo" data-repo="your-repo"></a> renders with a GitHub icon and links to its repo root. Reference a code symbol with a typed badge, like <a class="ident" data-type="class" data-repo="your-repo">YourService</a>.</p>
+
+<p class="annotatable">Use a panel to call something out:</p>
+<div class="panel warning">
+  <span class="panel-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 3.5 17.5 16.5H2.5L10 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M10 8.5v3.2M10 14v.01" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span>
+  <div class="panel-body annotatable"><span class="panel-title">Keep facts verifiable</span>The guide summarises your sources of truth — it should never contradict them. When in doubt, link the source and keep the summary short.</div>
+</div>
+
+<h3>Diagrams</h3>
+<p class="annotatable">Diagrams are Mermaid inside a framed, pan/zoom canvas. Keep node labels short:</p>
+<div class="canvas">
+  <div class="canvas-bar">
+    <span class="canvas-title">Example flow</span>
+    <div class="canvas-tools"></div>
+  </div>
+  <div class="canvas-stage">
+    <pre class="mermaid">flowchart LR
+  A[Reader] --> B{Suggest a change}
+  B --> C[Agent checks source of truth]
+  C --> D[Log + edit fragment]
+  D --> E[pal build]
+  E --> A</pre>
+  </div>
+</div>

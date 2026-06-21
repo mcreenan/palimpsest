@@ -1,0 +1,44 @@
+# Build → test → deploy. Merges to main ship to staging; tagged releases ship to
+# production. See runbooks/deploys.md for the human side of this.
+name: deploy
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: npm ci
+      - run: npm test
+
+  build-and-push:
+    needs: test
+    runs-on: ubuntu-latest
+    permissions: { contents: read, packages: write }
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build and push service images
+        run: |
+          for svc in gateway accounts billing usage notifications; do
+            docker build -t ghcr.io/demo-co/platform-$svc:${GITHUB_SHA} services/$svc
+            docker push ghcr.io/demo-co/platform-$svc:${GITHUB_SHA}
+          done
+
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    # main → staging; a v* tag → production.
+    environment: ${{ startsWith(github.ref, 'refs/tags/') && 'production' || 'staging' }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply manifests
+        run: |
+          aws eks update-kubeconfig --name eks-${{ job.environment }}
+          kubectl apply -f kubernetes/
+          kubectl rollout status deploy/gateway --timeout=120s

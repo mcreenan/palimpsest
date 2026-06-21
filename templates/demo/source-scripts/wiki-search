@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+#
+# wiki-search "<query>" — search the wiki and print matching "<id>\t<title>" lines.
+#
+# This is an EXAMPLE of how to wrap an external system (here: a wiki / Confluence)
+# as a small CLI script an agent can call. In this demo it greps local sample
+# articles under sources/docs/wiki/; in a real project you'd replace the body with
+# a call to your wiki's search API and emit "<id>\t<title>" the same way.
+#
+# Pair with: wiki-get-article <id>
+#
+set -euo pipefail
+
+query="${1:-}"
+if [ -z "$query" ]; then
+  echo "usage: wiki-search <query>" >&2
+  exit 2
+fi
+
+# Resolve the wiki content dir relative to this script (project-root/sources/docs/wiki).
+root="$(cd "$(dirname "$0")/.." && pwd)"
+dir="$root/sources/docs/wiki"
+
+if command -v rg >/dev/null 2>&1; then
+  files="$(rg -l -i --glob '*.md' -- "$query" "$dir" 2>/dev/null || true)"
+else
+  files="$(grep -rIl -i --include='*.md' -- "$query" "$dir" 2>/dev/null || true)"
+fi
+
+if [ -z "$files" ]; then
+  echo "(no matches for \"$query\")"
+  exit 0
+fi
+
+while IFS= read -r f; do
+  [ -z "$f" ] && continue
+  base="$(basename "$f" .md)"
+  id="${base%%-*}"
+  title="$(sed -n 's/^#[[:space:]]\{1,\}//p' "$f" | head -1)"
+  [ -z "$title" ] && title="$base"
+  printf '%s\t%s\n' "$id" "$title"
+done <<< "$files"

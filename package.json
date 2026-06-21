@@ -1,0 +1,45 @@
+{
+  "name": "palimpsest",
+  "version": "0.1.0",
+  "description": "A starter kit and toolchain for building an organization's engineering guide as a self-contained, living HTML document.",
+  "type": "module",
+  "license": "MIT",
+  "bin": {
+    "pal": "dist/cli.js",
+    "palimpsest": "dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "engine",
+    "templates"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "pal": "node dist/cli.js"
+  },
+  "dependencies": {
+    "@clack/prompts": "^0.7.0",
+    "cac": "^6.7.14",
+    "chokidar": "^3.6.0",
+    "culori": "^4.0.1",
+    "node-html-parser": "^6.1.13",
+    "picocolors": "^1.0.1",
+    "postcss": "^8.4.38",
+    "sirv": "^2.0.4",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/culori": "^2.1.1",
+    "@types/node": "^20.12.12",
+    "tsup": "^8.0.2",
+    "typescript": "^5.4.5",
+    "vitest": "^1.6.0"
+  }
+}

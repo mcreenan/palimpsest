@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+#
+# wiki-get-article <id> — print the full content of a wiki article by id.
+#
+# This is an EXAMPLE of how to wrap an external system as a small CLI script an
+# agent can call. In this demo it reads a local sample article under
+# sources/docs/wiki/; in a real project you'd replace the body with a call to your
+# wiki's get-page API (e.g. by page id) and print the page content.
+#
+# Pair with: wiki-search <query>  (which prints the ids)
+#
+set -euo pipefail
+
+id="${1:-}"
+if [ -z "$id" ]; then
+  echo "usage: wiki-get-article <id>" >&2
+  exit 2
+fi
+
+root="$(cd "$(dirname "$0")/.." && pwd)"
+dir="$root/sources/docs/wiki"
+
+file="$(ls "$dir/${id}-"*.md 2>/dev/null | head -1 || true)"
+if [ -z "$file" ] || [ ! -f "$file" ]; then
+  echo "no wiki article with id \"$id\"" >&2
+  exit 1
+fi
+
+cat "$file"
