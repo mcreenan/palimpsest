@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import readline from "node:readline";
 import { execSync } from "node:child_process";
 import * as clack from "@clack/prompts";
 import { parseConfig, CONFIG_FILENAME } from "../core/config.js";
@@ -18,13 +19,18 @@ import { log, pc } from "../core/log.js";
 function opt(opts: Record<string, unknown>, ...keys: string[]): string | undefined {
   for (const k of keys) {
     const v = opts[k];
-    if (typeof v === "string" && v.length) return v;
+    if (typeof v !== "string") continue;
+    // Ignore empty values and the literal noise strings that leak in when a
+    // wrapper interpolates an unset variable (e.g. `--theme undefined`).
+    const s = v.trim();
+    if (!s || s === "undefined" || s === "null") continue;
+    return s;
   }
   return undefined;
 }
 
 export async function runInit(opts: Record<string, unknown>): Promise<void> {
-  const flagName = opt(opts, "name") || (typeof opts.name === "string" ? opts.name : undefined);
+  const flagName = opt(opts, "name");
   const yes = opts.yes === true;
   const interactive = !yes && Boolean(process.stdin.isTTY && process.stdout.isTTY);
 
@@ -57,8 +63,8 @@ export async function runInit(opts: Record<string, unknown>): Promise<void> {
       githubOrg,
       name,
       title: opt(opts, "title") || `${orgName} Engineering Guide`,
-      dir: opts.dir ? path.resolve(String(opts.dir)) : path.resolve(process.cwd(), name),
-      themeFile: opts.theme ? path.resolve(String(opts.theme)) : undefined,
+      dir: opt(opts, "dir") ? path.resolve(opt(opts, "dir")!) : path.resolve(process.cwd(), name),
+      themeFile: opt(opts, "theme") ? path.resolve(opt(opts, "theme")!) : undefined,
     };
     logoInput = opt(opts, "logo");
   }
@@ -162,14 +168,41 @@ async function promptLogo(): Promise<string | undefined> {
     initialValue: "skip",
   });
   if (clack.isCancel(choice) || choice === "skip") return undefined;
+  if (choice === "svg") return readSvgMarkup();
   const prompts: Record<string, string> = {
     url: "Image URL (png, jpg, svg, …)",
     path: "Absolute path to the image",
-    svg: "Paste SVG markup (a single line)",
   };
   const v = await clack.text({ message: prompts[choice as string]! });
   if (clack.isCancel(v)) return undefined;
   const s = String(v).trim();
+  return s || undefined;
+}
+
+/**
+ * Read pasted SVG markup, which usually spans many lines. `clack.text` is
+ * single-line — the first newline in a paste submits it and truncates the SVG —
+ * so we read raw lines instead and stop once we see the closing `</svg>`, a
+ * blank line, or EOF (Ctrl-D).
+ */
+async function readSvgMarkup(): Promise<string | undefined> {
+  clack.log.step("Paste your SVG markup — multiple lines are fine.");
+  clack.log.message(pc.dim("Submits automatically at </svg>; or finish with a blank line or Ctrl-D."));
+  const rl = readline.createInterface({ input: process.stdin, terminal: process.stdin.isTTY === true });
+  const lines: string[] = [];
+  try {
+    for await (const line of rl) {
+      if (line.trim() === "") {
+        if (lines.length) break;
+        continue;
+      }
+      lines.push(line);
+      if (lines.join("\n").includes("</svg>")) break;
+    }
+  } finally {
+    rl.close();
+  }
+  const s = lines.join("\n").trim();
   return s || undefined;
 }
 
