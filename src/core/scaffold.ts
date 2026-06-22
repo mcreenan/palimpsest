@@ -138,7 +138,7 @@ export function scaffold(a: ScaffoldAnswers, today: string): string[] {
       validate: "pal validate",
       publish: "pal publish",
     },
-    devDependencies: { palimpsest: spec },
+    devDependencies: { "@mcreenan/palimpsest": spec },
   };
   fs.writeFileSync(path.join(a.dir, "package.json"), JSON.stringify(pkg, null, 2) + "\n");
 
