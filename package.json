@@ -3,7 +3,15 @@
   "version": "0.1.0",
   "description": "A starter kit and toolchain for building an organization's engineering guide as a self-contained, living HTML document.",
   "type": "module",
-  "license": "MIT",
+  "license": "CPAL-1.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mcreenan/palimpsest.git"
+  },
+  "homepage": "https://github.com/mcreenan/palimpsest",
+  "bugs": {
+    "url": "https://github.com/mcreenan/palimpsest/issues"
+  },
   "publishConfig": {
     "access": "public"
   },

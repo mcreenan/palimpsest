@@ -178,3 +178,12 @@ npm run typecheck
 
 The package contains three trees: `src/` (CLI + build core), `engine/` (the shipped
 page shell, CSS, JS, and vendored Mermaid), and `templates/` (project scaffolding).
+
+## License
+
+palimpsest is licensed under the [Common Public Attribution License 1.0](LICENSE)
+(CPAL-1.0). You're free to use, modify, and distribute it. Because the engine is
+embedded into every guide it generates, the license's attribution clause (Exhibit
+B) requires that the **Built with palimpsest** link palimpsest renders at the
+bottom of the table of contents stays in place. See the [LICENSE](LICENSE) for the
+full terms.
