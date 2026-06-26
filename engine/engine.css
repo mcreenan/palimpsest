@@ -187,7 +187,7 @@ a:hover { color: var(--accent-hover); }
   line-height: 18px;
   color: var(--text-secondary);
 }
-.toc-colophon a { color: var(--text-secondary); text-decoration: underline; text-underline-offset: 2px; }
+.toc-colophon a { display: inline; gap: 0; padding: 0; border-left: 0; color: var(--text-secondary); text-decoration: underline; text-underline-offset: 2px; }
 .toc-colophon a:hover { color: var(--accent); }
 
 .toc-overlay {
