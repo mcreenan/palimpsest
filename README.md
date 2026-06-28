@@ -1,6 +1,6 @@
 # palimpsest
 
-[![npm](https://img.shields.io/npm/v/@kelotenic/palimpsest)](https://www.npmjs.com/package/@kelotenic/palimpsest)
+[![npm](https://img.shields.io/npm/v/@kenotelic/palimpsest)](https://www.npmjs.com/package/@kenotelic/palimpsest)
 
 A starter kit and toolchain for building an organization's **engineering guide** —
 a self-contained, living HTML handbook assembled from source. palimpsest ships the
@@ -11,13 +11,13 @@ tokens + content**.
 
 ```bash
 # install once, then run `pal` anywhere:
-npm install -g @kelotenic/palimpsest
+npm install -g @kenotelic/palimpsest
 pal init                              # scaffold a new guide (interactive wizard)
 pal demo                              # ...or a fully-worked example you can open immediately
 
 # prefer not to install? run it straight from npm:
-npx @kelotenic/palimpsest@latest       # same scaffold wizard
-npx @kelotenic/palimpsest@latest demo  # the demo
+npx @kenotelic/palimpsest@latest       # same scaffold wizard
+npx @kenotelic/palimpsest@latest demo  # the demo
 ```
 
 ## The workflow
@@ -26,7 +26,7 @@ palimpsest does the scaffolding and the busywork; an agent does the writing. The
 intended path from empty project to published guide:
 
 ```bash
-npx @kelotenic/palimpsest@latest       # 1. SCAFFOLD — creates a thin project + first build
+npx @kenotelic/palimpsest@latest       # 1. SCAFFOLD — creates a thin project + first build
 cd my-org-engineering-guide
 
 pal source add <name> --type repo …   # 2. SOURCES — register your sources of truth FIRST
@@ -58,7 +58,7 @@ edit `sections/*.html` yourself. `pal dev` reloads as you go.
 ### Try it without your own sources
 
 ```bash
-npx @kelotenic/palimpsest@latest demo            # does steps 1–2 for you (init + sample sources)
+npx @kenotelic/palimpsest@latest demo            # does steps 1–2 for you (init + sample sources)
 cd palimpsest-demo
 pal outline   →   pal draft   →   pal dev
 ```
@@ -89,7 +89,7 @@ Shipping, Supporting and Maintaining, References — as an empty skeleton to fil
 `pal build` composes the palimpsest **engine** (shipped in this package) with your
 config, theme, and content into a deployable bundle: the guide HTML, its css/js,
 the vendored Mermaid library, and `changelog.html`. The engine improves with
-`npm update @kelotenic/palimpsest`; run `pal eject` to copy it into your project and own it.
+`npm update @kenotelic/palimpsest`; run `pal eject` to copy it into your project and own it.
 
 ## Commands
 
