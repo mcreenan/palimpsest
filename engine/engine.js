@@ -281,6 +281,38 @@
     wireBlock(el);
   });
 
+  /* ---------- Modal accessibility: focus trap + restore ----------
+     Keeps Tab/Shift+Tab inside an open dialog and returns focus to the
+     element that opened it on close (WCAG 2.4.3 / 4.1.2). */
+  function modalFocusables(container) {
+    return Array.prototype.slice.call(container.querySelectorAll(
+      'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+    )).filter(function (el) { return el.offsetParent !== null; });
+  }
+  function makeModalTrap(dialog) {
+    var opener = null;
+    function onKeydown(e) {
+      if (e.key !== 'Tab') return;
+      var f = modalFocusables(dialog);
+      if (!f.length) return;
+      var first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+    return {
+      activate: function (focusEl) {
+        opener = document.activeElement;
+        dialog.addEventListener('keydown', onKeydown);
+        if (focusEl) focusEl.focus();
+      },
+      deactivate: function () {
+        dialog.removeEventListener('keydown', onKeydown);
+        if (opener && typeof opener.focus === 'function') opener.focus();
+        opener = null;
+      }
+    };
+  }
+
   /* ---------- Modal ---------- */
   var modal = document.getElementById('annoModal');
   var whereEl = document.getElementById('annoWhere');
@@ -289,6 +321,7 @@
   var textEl = document.getElementById('annoText');
   var outWrap = document.getElementById('annoOutput');
   var outPre = document.getElementById('annoPrompt');
+  var annoTrap = makeModalTrap(modal);
 
   function sectionInfoOf(el) {
     var sec = el.closest('section');
@@ -307,7 +340,7 @@
     outWrap.classList.remove('show');
     outPre.textContent = '';
     modal.classList.add('open');
-    setTimeout(function () { textEl.focus(); }, 50);
+    setTimeout(function () { annoTrap.activate(textEl); }, 50);
   }
 
   function openModal(el) {
@@ -382,7 +415,7 @@
     showModal();
   }
 
-  function closeModal() { modal.classList.remove('open'); }
+  function closeModal() { modal.classList.remove('open'); annoTrap.deactivate(); }
 
   function buildPrompt() {
     var suggestion = textEl.value.trim();
@@ -517,7 +550,8 @@
   var srcModal = document.getElementById('srcModal');
   var srcList = document.getElementById('srcList');
   var srcWhere = document.getElementById('srcWhere');
-  function closeSrc() { srcModal.classList.remove('open'); }
+  var srcTrap = makeModalTrap(srcModal);
+  function closeSrc() { srcModal.classList.remove('open'); srcTrap.deactivate(); }
   document.getElementById('srcClose').addEventListener('click', closeSrc);
   srcModal.addEventListener('click', function (e) { if (e.target === srcModal) closeSrc(); });
 
@@ -540,6 +574,7 @@
       srcList.appendChild(li);
     });
     srcModal.classList.add('open');
+    srcTrap.activate(document.getElementById('srcClose'));
   }
   function makeSrcBtn(where, dataEl) {
     var n = dataEl.querySelectorAll('a').length;

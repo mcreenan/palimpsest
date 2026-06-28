@@ -100,6 +100,9 @@ cli
 cli
   .command("outline", "Generate an agent prompt to propose a section outline from your sources")
   .option("--print", "Also print the full prompt to stdout")
+  .option("--run", "Launch a local agent CLI to run the prompt end-to-end (no copy/paste)")
+  .option("--agent <command>", "Agent CLI to launch with --run (default: $PAL_AGENT or claude)")
+  .option("--headless", "Run the agent non-interactively (Claude Code -p print mode)")
   .action(async (opts: Record<string, unknown>) => {
     const { runOutline } = await import("./commands/outline.js");
     await runOutline(opts);
@@ -108,6 +111,9 @@ cli
 cli
   .command("draft", "Generate an agent prompt to write baseline content (Workflow: research→generate→synthesize→audit)")
   .option("--print", "Also print the full prompt to stdout")
+  .option("--run", "Launch a local agent CLI to run the prompt end-to-end (no copy/paste)")
+  .option("--agent <command>", "Agent CLI to launch with --run (default: $PAL_AGENT or claude)")
+  .option("--headless", "Run the agent non-interactively (Claude Code -p print mode)")
   .action(async (opts: Record<string, unknown>) => {
     const { runDraft } = await import("./commands/draft.js");
     await runDraft(opts);
@@ -120,6 +126,30 @@ cli
   .action(async (opts: Record<string, unknown>) => {
     const { runValidate } = await import("./commands/validate.js");
     await runValidate(opts);
+  });
+
+cli
+  .command("export", "Render the guide to PDF via a local headless browser")
+  .option("--out <file>", "Output PDF path (default: <name>.pdf in the output dir)")
+  .option("--chrome <path>", "Chrome/Chromium/Edge binary (default: $PAL_CHROME or autodetected)")
+  .option("--wait <ms>", "Time to let diagrams render before printing", { default: 8000 })
+  .action(async (opts: Record<string, unknown>) => {
+    const { runExport } = await import("./commands/export.js");
+    await runExport(opts);
+  });
+
+cli
+  .command("links", "Check repo, code, and source links for rot (network)")
+  .alias("doctor")
+  .option("--offline", "List link targets without probing the network")
+  .option("--list", "Alias for --offline")
+  .option("--skip-code", "Skip deep code links (…/blob/…) — auth-sensitive")
+  .option("--timeout <seconds>", "Per-request timeout in seconds", { default: 10 })
+  .option("--concurrency <n>", "Max simultaneous requests", { default: 8 })
+  .option("--quiet", "Only print broken links")
+  .action(async (opts: Record<string, unknown>) => {
+    const { runLinks } = await import("./commands/links.js");
+    await runLinks(opts);
   });
 
 cli

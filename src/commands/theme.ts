@@ -3,6 +3,8 @@ import path from "node:path";
 import { loadConfig } from "../core/config.js";
 import { importTheme } from "../core/theme/import-css.js";
 import { renderTokensCss, loadThemeValues } from "../core/theme/render.js";
+import { completeWithDefaults } from "../core/theme/derive.js";
+import { checkContrast } from "../core/theme/contrast.js";
 import { TOKENS } from "../core/theme/contract.js";
 import { log, pc } from "../core/log.js";
 
@@ -88,4 +90,30 @@ function doCheck(tokensPath: string): void {
   }
   log.info("");
   log.ok(`${setCount}/${TOKENS.length} slots set explicitly; the rest fall back to built-in defaults.`);
+
+  reportContrast(present);
+}
+
+/** Check WCAG AA contrast for every foreground/background pair the engine renders. */
+function reportContrast(present: Record<string, string>): void {
+  const results = checkContrast(completeWithDefaults(present));
+  const fails = results.filter((r) => !r.pass);
+
+  log.info(pc.bold("\ncontrast (WCAG AA)"));
+  for (const r of results) {
+    const ratio = r.ratio === null ? "  n/a" : r.ratio.toFixed(2).padStart(5) + ":1";
+    if (r.ratio === null) {
+      log.info(`  ${pc.dim("○")} ${r.label.padEnd(34)} ${pc.dim(ratio + " (not a plain color — skipped)")}`);
+    } else if (r.pass) {
+      log.info(`  ${pc.green("●")} ${r.label.padEnd(34)} ${pc.dim(ratio + "  ≥ " + r.min)}`);
+    } else {
+      log.info(`  ${pc.red("✕")} ${r.label.padEnd(34)} ${pc.red(ratio)} ${pc.dim("needs ≥ " + r.min + " (" + r.level + "); " + r.fg.slice(2) + " on " + r.bg.slice(2))}`);
+    }
+  }
+  log.info("");
+  if (fails.length === 0) {
+    log.ok("All rendered text pairs meet WCAG AA contrast.");
+  } else {
+    log.warn(`${fails.length} pair(s) below WCAG AA — adjust the listed tokens for readability.`);
+  }
 }

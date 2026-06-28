@@ -1,5 +1,6 @@
 import { loadConfig } from "../core/config.js";
 import { buildOutlinePrompt, emitPrompt } from "../core/prompts.js";
+import { maybeRunAgent } from "./run-agent.js";
 import { log } from "../core/log.js";
 
 export async function runOutline(opts: Record<string, unknown>): Promise<void> {
@@ -16,6 +17,9 @@ export async function runOutline(opts: Record<string, unknown>): Promise<void> {
 
   const prompt = buildOutlinePrompt(cfg);
   emitPrompt(cfg, "outline", prompt, opts.print === true);
+
+  if (await maybeRunAgent(cfg, prompt, "outline", opts)) return;
+
   log.info("");
   log.dim("The agent will propose a Parts→Sections outline and write it into");
   log.dim("palimpsest.config.json. Review it, then run `pal draft` to fill content.");
