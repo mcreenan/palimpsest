@@ -806,4 +806,14 @@ tbody tr:last-child td { border-bottom: none; }
   .content { margin-left: 0; }
   .layout { padding-top: 0; }
   .codeblock, .prompt-output pre { background: var(--bg); color: var(--text); border: 1px solid var(--border); }
+
+  /* Each Part and each top-level section starts a new page (subsections — h3 —
+     are inside a section, so they don't). A part's heading travels with its
+     first section rather than sitting alone, and the first element never breaks
+     so there's no blank leading page. */
+  .content-inner > .part-divider,
+  .content-inner > section { break-before: page; page-break-before: always; }
+  .content-inner > .part-divider + section,
+  .content-inner > :first-child { break-before: auto; page-break-before: auto; }
+  section + section { border-top: none; }
 }
