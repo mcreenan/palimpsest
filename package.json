@@ -1,6 +1,6 @@
 {
   "name": "@kenotelic/palimpsest",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "A starter kit and toolchain for building an organization's engineering guide as a self-contained, living HTML document.",
   "type": "module",
   "license": "CPAL-1.0",
