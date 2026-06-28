@@ -1,7 +1,7 @@
 # {{TITLE}}
 
 A living engineering guide for {{ORG_NAME}}, built with
-[palimpsest](https://www.npmjs.com/package/@kelonetic/palimpsest). It renders as a
+[palimpsest](https://www.npmjs.com/package/@kelotenic/palimpsest). It renders as a
 self-contained HTML page with a two-level table of contents, scrollspy
 navigation, section filtering, pan/zoom Mermaid diagrams, linked repo & code
 references, and an in-page **"Suggest a change"** flow.
