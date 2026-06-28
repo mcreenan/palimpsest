@@ -802,7 +802,7 @@ tbody tr:last-child td { border-bottom: none; }
 }
 
 @media print {
-  .site-header, .toc, .toc-toggle, .anno-trigger, .toc-overlay { display: none !important; }
+  .site-header, .toc, .toc-toggle, .anno-trigger, .toc-overlay, .skip-link { display: none !important; }
   .content { margin-left: 0; }
   .layout { padding-top: 0; }
   .codeblock, .prompt-output pre { background: var(--bg); color: var(--text); border: 1px solid var(--border); }
