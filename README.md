@@ -20,6 +20,18 @@ npx @kenotelic/palimpsest@latest       # same scaffold wizard
 npx @kenotelic/palimpsest@latest demo  # the demo
 ```
 
+## The generated artifact
+
+A built guide is a single, self-contained HTML page: a two-level scrollspy table
+of contents, restyleable design-system chrome, and inline source references.
+
+![The demo engineering guide on load — header, scrollspy table of contents, and the opening Orientation section.](docs/screenshot-main.png)
+
+Diagrams are rendered with a vendored Mermaid and are pan/zoom/fullscreen-capable,
+with the same in-page **"Suggest a change"** trigger every other block carries.
+
+![The Core Domain & Data Model section — a zoomable Mermaid ER diagram of the core entities by schema.](docs/screenshot-data-model-diagram.png)
+
 ## The workflow
 
 palimpsest does the scaffolding and the busywork; an agent does the writing. The
